@@ -3,8 +3,8 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, PNGImage, GIFImg, Clipbrd,  Vcl.ExtCtrls,GDIPAPI, GDIPOBJ;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, PNGImage, GIFImg, Clipbrd;
 
 type
   TCsvPng = class(TObject)
@@ -135,31 +135,30 @@ end;
 procedure TCsvPng.CsvToIco(out ICO: TIcon);
 var
   x,y: Integer;
-  BMP1: TBitmap;
-  BMP2: TBitmap;
+  BMP, MASK: TBitmap;
   IconInfo: TIconInfo;
 begin
   ICO := TIcon.Create();
-  BMP2 := TBitmap.Create();
-  CsvToBmp(BMP1);
+  MASK := TBitmap.Create();
+  CsvToBmp(BMP);
   try
-    BMP2.Assign(BMP1);
+    MASK.Assign(BMP);
     //透明色ありの時
     if FTransparent then
     begin
-      BMP2.Mask(FTransparentColor);
+      MASK.Mask(FTransparentColor);
     end
     else
     begin
-      BMP2.PixelFormat := pf24bit;   //上位24bitがRGB
-      for y := 0 to BMP2.Height - 1 do
+      MASK.PixelFormat := pf24bit;   //上位24bitがRGB
+      for y := 0 to MASK.Height - 1 do
       begin
-        for x := 0 to BMP2.Width - 1 do
+        for x := 0 to MASK.Width - 1 do
         begin
           if FAlpha[y,x] = 0 then
-            BMP2.Canvas.Pixels[x,y] := $FFFFFF //透明
+            MASK.Canvas.Pixels[x,y] := $FFFFFF //透明
           else
-            BMP2.Canvas.Pixels[x,y] := $000000;//非透明
+            MASK.Canvas.Pixels[x,y] := $000000;//非透明
         end
       end
     end;
@@ -168,13 +167,13 @@ begin
     IconInfo.fIcon    := True;
     IconInfo.xHotspot := 0;
     IconInfo.yHotspot := 0;
-    IconInfo.hbmColor := BMP1.Handle;
-    IconInfo.hbmMask  := BMP2.Handle;
+    IconInfo.hbmColor := BMP.Handle;
+    IconInfo.hbmMask  := MASK.Handle;
     //TBitmap画像からTIcon画像を作成
     ICO.Handle := CreateIconIndirect(IconInfo);
   finally
-    BMP1.Free;
-    BMP2.Free;
+    BMP.Free;
+    MASK.Free;
   end;
 end;
 

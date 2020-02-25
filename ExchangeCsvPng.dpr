@@ -65,12 +65,13 @@ begin
     begin
       Writeln('');
       Writeln('ExchangeCsvPng.exe [変換スイッチ] [変換前]  [変換後]');
-      Writeln('例:ExchangeCsvPng.exe -csv2img -C "c:\tmp\sample.bmp"');
-      Writeln('[変換スイッチ] -変換前format2変換後format"');
+      Writeln(' 例:ExchangeCsvPng.exe -csv2img -C "c:\tmp\sample.bmp"');
+      Writeln(' [変換スイッチ] -変換前format2変換後format"');
       Writeln('  [変換前format] csv or img');
       Writeln('  [変換後format] csv or img');
-      Writeln('[変換前] ファイル名 or -C(クリップボード)');
-      Writeln('[変換後] ファイル名 or -C(クリップボード)');
+      Writeln(' [変換前] ファイル名 or -C(クリップボード)');
+      Writeln(' [変換後] ファイル名 or -C(クリップボード)');
+      Writeln('');
       Exit;
     end;
 
