@@ -135,30 +135,30 @@ end;
 procedure TCsvPng.CsvToIco(out ICO: TIcon);
 var
   x,y: Integer;
-  BMP, MASK: TBitmap;
+  BMP, MSK: TBitmap;
   IconInfo: TIconInfo;
 begin
   ICO := TIcon.Create();
-  MASK := TBitmap.Create();
+  MSK := TBitmap.Create();
   CsvToBmp(BMP);
   try
-    MASK.Assign(BMP);
+    MSK.Assign(BMP);
     //透明色ありの時
     if FTransparent then
     begin
-      MASK.Mask(FTransparentColor);
+      MSK.Mask(FTransparentColor);
     end
     else
     begin
-      MASK.PixelFormat := pf24bit;   //上位24bitがRGB
-      for y := 0 to MASK.Height - 1 do
+      MSK.PixelFormat := pf24bit;   //上位24bitがRGB
+      for y := 0 to MSK.Height - 1 do
       begin
-        for x := 0 to MASK.Width - 1 do
+        for x := 0 to MSK.Width - 1 do
         begin
           if FAlpha[y,x] = 0 then
-            MASK.Canvas.Pixels[x,y] := $FFFFFF //透明
+            MSK.Canvas.Pixels[x,y] := $FFFFFF //透明
           else
-            MASK.Canvas.Pixels[x,y] := $000000;//非透明
+            MSK.Canvas.Pixels[x,y] := $000000;//非透明
         end
       end
     end;
@@ -168,12 +168,12 @@ begin
     IconInfo.xHotspot := 0;
     IconInfo.yHotspot := 0;
     IconInfo.hbmColor := BMP.Handle;
-    IconInfo.hbmMask  := MASK.Handle;
+    IconInfo.hbmMask  := MSK.Handle;
     //TBitmap画像からTIcon画像を作成
     ICO.Handle := CreateIconIndirect(IconInfo);
   finally
     BMP.Free;
-    MASK.Free;
+    MSK.Free;
   end;
 end;
 
